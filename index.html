@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THE FALL OF US</title>
+  <link href="https://fonts.googleapis.com/css2?family=Protest+Riot&family=Special+Elite&family=Bebas+Neue&family=Permanent+Marker&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=VT323&family=Barlow+Condensed:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --teal-deep:    #0d2b2b;
+      --teal-mid:     #1a4040;
+      --teal-bright:  #2a6b6b;
+      --teal-accent:  #3d9e9e;
+      --amber:        #b85c38;
+      --amber-dark:   #8b3d22;
+      --paper:        #e6dfd0;
+      --cream:        #f0ead8;
+      --ink:          #0e0b08;
+      --gray:         #6b7a7a;
+      --gray-light:   #9aabab;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--teal-deep);
+      color: var(--paper);
+      font-family: 'Special Elite', serif;
+      overflow-x: hidden;
+    }
+
+    /* ── FILM GRAIN ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      pointer-events: none;
+      opacity: 0.35;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+      mix-blend-mode: overlay;
+    }
+
+    /* ── HORIZONTAL SCAN LINES ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 998;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.04) 2px,
+        rgba(0,0,0,0.04) 4px
+      );
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1001; /* above #merch (1000) and grain (999) */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 48px;
+      background: rgba(13,43,43,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--teal-mid);
+    }
+
+    .nav-logo {
+      font-family: 'VT323', monospace;
+      font-size: 1.5rem;
+      color: var(--teal-accent);
+      letter-spacing: 0.25em;
+      text-decoration: none;
+      opacity: 0;
+      transform: translateY(-4px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      pointer-events: none;
+    }
+
+    .nav-logo.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--gray-light);
+      text-decoration: none;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--teal-accent); }
+
+    /* ── HAMBURGER BUTTON (mobile only) ── */
+    .nav-burger {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--teal-accent);
+      cursor: pointer;
+      padding: 4px;
+      line-height: 1;
+    }
+    .nav-burger svg {
+      display: block;
+      width: 22px;
+      height: 22px;
+      stroke: var(--teal-accent);
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    /* ── DROPDOWN PANEL ── */
+    .nav-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0; right: 0;
+      background: rgba(8,24,24,0.98);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--teal-mid);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    .nav-dropdown.is-open { max-height: 400px; }
+    .nav-dropdown a {
+      display: block;
+      padding: 15px 24px;
+      color: var(--gray-light);
+      text-decoration: none;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(26,64,64,0.6);
+      transition: color 0.2s, background 0.2s;
+    }
+    .nav-dropdown a:last-child { border-bottom: none; }
+    .nav-dropdown a:hover { color: var(--teal-accent); background: rgba(61,158,158,0.06); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 120px 60px 80px;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 80% 60% at 70% 50%, rgba(26,64,64,0.5) 0%, transparent 70%),
+        var(--teal-deep);
+    }
+
+    /* Torn bottom edge */
+    #hero::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0; right: 0;
+      height: 70px;
+      background: var(--paper);
+      clip-path: polygon(0 65%, 2% 20%, 5% 75%, 9% 30%, 12% 70%, 16% 15%, 20% 60%, 24% 25%, 28% 80%, 33% 35%, 37% 72%, 41% 18%, 46% 65%, 50% 28%, 54% 72%, 58% 20%, 63% 68%, 67% 30%, 71% 75%, 75% 22%, 80% 65%, 84% 28%, 88% 72%, 92% 32%, 96% 68%, 100% 40%, 100% 100%, 0 100%);
+    }
+
+    .hero-left {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.4em;
+      color: var(--teal-accent);
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      display: inline-block;
+      border: 1px solid var(--teal-accent);
+      padding: 5px 14px;
+    }
+
+    .hero-desc {
+      margin-top: 20px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      line-height: 1.9;
+      color: var(--gray-light);
+      max-width: 380px;
+      border-left: 2px solid var(--teal-bright);
+      padding-left: 18px;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      margin-top: 44px;
+    }
+
+    .btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      text-decoration: none;
+      border: 1px solid;
+      transition: all 0.15s;
+      position: relative;
+    }
+
+    .btn-primary {
+      background: var(--amber);
+      color: var(--paper);
+      border-color: var(--amber);
+    }
+
+    .btn-primary:hover {
+      background: transparent;
+      color: var(--amber);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--teal-accent);
+      border-color: var(--teal-accent);
+    }
+
+    .btn-ghost:hover {
+      background: var(--teal-accent);
+      color: var(--ink);
+    }
+
+    /* Hero right: text content */
+    .hero-right {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .logo-container {
+      position: relative;
+      width: clamp(200px, 26vw, 360px);
+    }
+
+    .logo-container img {
+      width: 100%;
+      /* Make logo render in paper color (#e6dfd0): force to black → invert to white → warm tint to paper */
+      filter: brightness(0) invert(1) sepia(0.18) saturate(0.55) brightness(0.94);
+      mix-blend-mode: normal;
+      opacity: 1;
+    }
+
+    /* Teal glow behind logo */
+    .logo-glow {
+      position: absolute;
+      inset: -20%;
+      background: radial-gradient(ellipse 60% 70% at 50% 50%, rgba(61,158,158,0.18) 0%, transparent 70%);
+      z-index: -1;
+    }
+
+    /* Devolution strip in hero */
+    .devolution-strip {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 180px;
+      opacity: 0.07;
+      filter: sepia(1) hue-rotate(160deg);
+      pointer-events: none;
+    }
+
+    /* Ambient background text */
+    .bg-text {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Protest Riot', sans-serif;
+      font-size: 18vw;
+      color: rgba(61,158,158,0.04);
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 1;
+      letter-spacing: -0.05em;
+    }
+
+    /* ── SECTION BASE ── */
+    section {
+      position: relative;
+      padding: 100px 60px;
+    }
+
+    .section-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--teal-accent);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-tag::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: var(--teal-bright);
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.5rem, 7vw, 7.5rem);
+      line-height: 0.92;
+      letter-spacing: 0.06em;
+      color: var(--paper);
+      margin-bottom: 52px;
+      text-transform: uppercase;
+    }
+
+    /* ── MUSIC ── */
+    #music {
+      background: var(--ink);
+    }
+
+    #music::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0; right: 0;
+      height: 60px;
+      background: var(--teal-deep);
+      clip-path: polygon(0 75%, 4% 35%, 8% 78%, 13% 25%, 18% 68%, 23% 18%, 28% 62%, 33% 82%, 39% 38%, 44% 75%, 50% 28%, 55% 72%, 60% 22%, 65% 65%, 70% 30%, 75% 70%, 80% 28%, 86% 65%, 91% 35%, 96% 70%, 100% 48%, 100% 100%, 0 100%);
+    }
+
+    .releases-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 2px;
+    }
+
+    .release-card {
+      background: var(--teal-deep);
+      border: 1px solid rgba(61,158,158,0.15);
+      padding: 0;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+      cursor: pointer;
+    }
+
+    .release-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--teal-accent);
+    }
+
+    .release-art {
+      aspect-ratio: 1;
+      background: var(--teal-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Devolution-inspired diagonal pattern on cards */
+    .release-art::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 12px,
+        rgba(61,158,158,0.04) 12px,
+        rgba(61,158,158,0.04) 13px
+      );
+    }
+
+    .release-art-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      color: var(--paper);
+      text-align: center;
+      line-height: 1;
+      position: relative;
+      z-index: 2;
+    }
+
+    .release-art-text small {
+      display: block;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.45rem;
+      letter-spacing: 0.2em;
+      color: var(--teal-accent);
+      margin-top: 10px;
+    }
+
+    .release-info {
+      padding: 18px 20px;
+    }
+
+    .release-name {
+      font-family: 'Special Elite', serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--paper);
+    }
+
+    .release-meta {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      color: var(--gray);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .stream-links {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .stream-link {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal-accent);
+      text-decoration: none;
+      border: 1px solid rgba(61,158,158,0.4);
+      padding: 4px 8px;
+      transition: all 0.15s;
+    }
+
+    .stream-link:hover {
+      background: var(--teal-accent);
+      color: var(--ink);
+      border-color: var(--teal-accent);
+    }
+
+    /* ── TOUR ── */
+    #tour {
+      background: var(--teal-deep);
+    }
+
+    .tour-list {
+      list-style: none;
+      border-top: 1px solid rgba(61,158,158,0.2);
+    }
+
+    .tour-item {
+      display: grid;
+      grid-template-columns: 110px 1fr auto;
+      align-items: center;
+      gap: 28px;
+      padding: 26px 0;
+      border-bottom: 1px solid rgba(61,158,158,0.12);
+      transition: all 0.15s;
+    }
+
+    .tour-item:hover {
+      padding-left: 14px;
+      border-bottom-color: var(--teal-accent);
+    }
+
+    .tour-date {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      width: 64px;
+      flex-shrink: 0;
+      border: 1px solid var(--teal-accent);
+      border-radius: 6px;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .tour-date-month {
+      display: block;
+      width: 100%;
+      background: var(--teal-accent);
+      color: var(--ink);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 4px 0;
+      font-weight: 700;
+    }
+
+    .tour-date-day {
+      display: block;
+      font-family: 'VT323', monospace;
+      font-size: 2.1rem;
+      line-height: 1;
+      color: var(--teal-accent);
+      padding: 4px 0 2px;
+    }
+
+    .tour-date-year {
+      display: block;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: var(--gray);
+      text-transform: uppercase;
+      padding-bottom: 5px;
+    }
+
+    .tour-venue {
+      font-family: 'Special Elite', serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--paper);
+    }
+
+    .tour-city {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--gray-light);
+      letter-spacing: 0.1em;
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+
+    .tour-ticket {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--paper);
+      border: 1px solid rgba(232,224,208,0.3);
+      padding: 9px 18px;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .tour-ticket:hover {
+      background: var(--amber);
+      border-color: var(--amber);
+    }
+
+    .sold-out {
+      color: var(--gray);
+      border-color: rgba(107,122,122,0.3);
+      pointer-events: none;
+    }
+
+    /* ── ABOUT ── */
+    #about {
+      background: var(--ink);
+      position: relative;
+    }
+
+    #about::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 60px;
+      background: var(--paper);
+      clip-path: polygon(0 75%, 4% 35%, 8% 78%, 13% 25%, 18% 68%, 23% 18%, 28% 62%, 33% 82%, 39% 38%, 44% 75%, 50% 28%, 55% 72%, 60% 22%, 65% 65%, 70% 30%, 75% 70%, 80% 28%, 86% 65%, 91% 35%, 96% 70%, 100% 48%, 100% 0, 0 0);
+      z-index: 2;
+    }
+
+    .about-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .about-text p {
+      font-size: 1rem;
+      line-height: 1.95;
+      color: var(--gray-light);
+      margin-bottom: 20px;
+      font-family: 'Special Elite', serif;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+    }
+
+    .about-text p:first-of-type::first-letter {
+      font-family: 'Protest Riot', sans-serif;
+      font-size: 3.8rem;
+      float: left;
+      line-height: 0.75;
+      margin-right: 8px;
+      margin-top: 10px;
+      color: var(--teal-accent);
+    }
+
+    .about-text .pull-quote {
+      border-left: 3px solid var(--amber);
+      padding-left: 20px;
+      margin: 28px 0;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.7;
+      color: var(--paper);
+      letter-spacing: 0.03em;
+    }
+
+    /* Devolution art in about section */
+    .devolution-display {
+      position: relative;
+    }
+
+    .devolution-display img {
+      width: 100%;
+      /* Tint whites toward paper color (#e6dfd0) — subtle warm tint, not heavy sepia */
+      filter: sepia(0.08) saturate(0.75) brightness(0.94);
+      border: 1px solid rgba(61,158,158,0.2);
+    }
+
+    .devolution-caption {
+      margin-top: 16px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      color: var(--gray);
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .band-members {
+      margin-top: 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .member-card {
+      padding: 16px;
+      border: 1px solid rgba(61,158,158,0.15);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .member-card:hover {
+      border-color: var(--teal-accent);
+      background: rgba(61,158,158,0.05);
+    }
+
+    .member-avatar {
+      width: 44px;
+      height: 44px;
+      background: var(--teal-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'VT323', monospace;
+      font-size: 1.3rem;
+      color: var(--teal-accent);
+      flex-shrink: 0;
+      border: 1px solid rgba(61,158,158,0.3);
+    }
+
+    .member-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--paper);
+    }
+
+    .member-role {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      color: var(--teal-accent);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    #about::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0; right: 0;
+      height: 60px;
+      background: var(--teal-deep);
+      clip-path: polygon(0 70%, 3% 30%, 7% 72%, 12% 22%, 17% 65%, 22% 20%, 27% 60%, 32% 78%, 38% 32%, 43% 70%, 50% 25%, 56% 68%, 61% 18%, 66% 62%, 71% 28%, 76% 68%, 81% 25%, 87% 62%, 92% 32%, 97% 66%, 100% 42%, 100% 100%, 0 100%);
+    }
+
+    /* ── VIDEO ── */
+    #video {
+      background: var(--teal-deep);
+    }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2px;
+    }
+
+    .video-featured,
+    .video-side {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .video-featured { aspect-ratio: 16/9; }
+    .video-side { aspect-ratio: 4/3; }
+
+    .video-thumb {
+      width: 100%;
+      height: 100%;
+      background:
+        repeating-linear-gradient(-45deg, #0d2b2b, #0d2b2b 8px, #112f2f 8px, #112f2f 16px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 14px;
+      transition: background 0.2s;
+    }
+
+    .video-thumb:hover {
+      background: var(--teal-mid);
+    }
+
+    .play-btn {
+      width: 58px;
+      height: 58px;
+      border: 1px solid var(--teal-accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .play-btn::after {
+      content: '';
+      border-left: 18px solid var(--teal-accent);
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      margin-left: 4px;
+    }
+
+    .video-thumb:hover .play-btn {
+      background: var(--teal-accent);
+    }
+
+    .video-thumb:hover .play-btn::after {
+      border-left-color: var(--ink);
+    }
+
+    .video-label {
+      font-family: 'Special Elite', serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--paper);
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    .video-side-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    /* ── MERCH ── */
+    #merch {
+      background: #000;
+      z-index: 1000; /* lifts entire section above body::before grain (z-index 999) */
+    }
+
+    #merch::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 60px;
+      background: #000;
+      clip-path: polygon(0 80%, 5% 40%, 10% 75%, 16% 20%, 22% 60%, 27% 10%, 33% 55%, 40% 80%, 46% 30%, 52% 70%, 58% 25%, 64% 65%, 70% 20%, 76% 60%, 82% 30%, 88% 70%, 94% 40%, 100% 65%, 100% 0, 0 0);
+      z-index: 2;
+    }
+
+    .merch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 36px;
+      margin-top: 60px;
+    }
+
+    .merch-item {
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .merch-item:nth-child(2) { transform: rotate(-1.5deg); }
+    .merch-item:nth-child(3) { transform: rotate(1deg); }
+    .merch-item:nth-child(4) { transform: rotate(-0.8deg); }
+    .merch-item:hover { transform: rotate(0) scale(1.03) !important; z-index: 10; }
+    .merch-img-hover { opacity: 0; }
+    .merch-item:hover .merch-img-default { opacity: 0; }
+    .merch-item:hover .merch-img-hover { opacity: 1; }
+
+    /* Tape strip at top of each item */
+    .merch-item::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 64px;
+      height: 22px;
+      background: rgba(184,92,56,0.38);
+      z-index: 5;
+    }
+
+    .merch-img {
+      width: 100%;
+      aspect-ratio: 1;
+      background: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--ink);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .merch-img-inner {
+      text-align: center;
+    }
+
+    .merch-icon {
+      font-size: 3.5rem;
+      display: block;
+      filter: grayscale(1) invert(1);
+      opacity: 0.55;
+    }
+
+    .merch-img.devolution-item img {
+      width: 80%;
+    }
+
+    .merch-img-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      color: var(--paper);
+      letter-spacing: 0.1em;
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    .merch-name {
+      font-family: 'Special Elite', serif;
+      font-size: 1rem;
+      color: #fff;
+      margin-top: 14px;
+    }
+
+    .merch-price {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--amber);
+      margin-top: 4px;
+    }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--ink);
+    }
+
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+    }
+
+    .contact-info p {
+      font-size: 0.95rem;
+      line-height: 1.9;
+      color: var(--gray-light);
+      margin-bottom: 32px;
+      font-family: 'Special Elite', serif;
+    }
+
+    .contact-channels {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .contact-channels a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--paper);
+      text-decoration: none;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: color 0.15s;
+    }
+
+    .contact-channels a::before {
+      content: '//';
+      color: var(--teal-accent);
+    }
+
+    .contact-channels a:hover { color: var(--teal-accent); }
+
+    .form-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--teal-accent);
+      margin-bottom: 28px;
+    }
+
+    .mailing-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    .form-input {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(61,158,158,0.3);
+      padding: 10px 0;
+      color: var(--paper);
+      font-family: 'Special Elite', serif;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-input:focus { border-bottom-color: var(--teal-accent); }
+    .form-input::placeholder { color: rgba(154,171,171,0.3); }
+
+    textarea.form-input { resize: none; min-height: 90px; }
+
+    .btn-submit {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 16px 32px;
+      background: var(--amber);
+      color: var(--paper);
+      border: 1px solid var(--amber);
+      cursor: crosshair;
+      transition: all 0.15s;
+      align-self: flex-start;
+    }
+
+    .btn-submit:hover {
+      background: transparent;
+      color: var(--amber);
+      border-color: var(--amber);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #060e0e;
+      color: rgba(154,171,171,0.35);
+      padding: 36px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-top: 1px solid rgba(61,158,158,0.12);
+    }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      color: rgba(61,158,158,0.5);
+      letter-spacing: 0.1em;
+    }
+
+    .social-links { display: flex; gap: 20px; align-items: center; }
+    .social-links a {
+      color: rgba(154,171,171,0.35);
+      text-decoration: none;
+      transition: color 0.15s;
+      display: flex;
+      align-items: center;
+    }
+    .social-links a:hover { color: var(--teal-accent); }
+    .social-links svg { width: 16px; height: 16px; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-up { animation: fadeUp 0.8s ease forwards; opacity: 0; }
+    .d1 { animation-delay: 0.1s; }
+    .d2 { animation-delay: 0.3s; }
+    .d3 { animation-delay: 0.5s; }
+    .d4 { animation-delay: 0.7s; }
+    .d5 { animation-delay: 0.9s; }
+
+    /* ── HERO SOCIAL ICONS ── */
+    .hero-social {
+      display: flex;
+      gap: 20px;
+      margin-top: 28px;
+      align-items: center;
+    }
+    .hero-social a {
+      color: var(--paper);
+      opacity: 0.65;
+      transition: color 0.2s, opacity 0.2s;
+      display: flex;
+      align-items: center;
+    }
+    .hero-social a:hover {
+      color: var(--teal-accent);
+      opacity: 1;
+    }
+    .hero-social svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.92; }
+      50% { opacity: 0.78; }
+    }
+
+    .logo-container img { animation: pulse-glow 6s ease-in-out infinite; }
+
+    /* ── PAPER SECTION OVERRIDES ── */
+    #music,
+    #about,
+    #contact {
+      background: var(--paper);
+    }
+
+    #music .section-title,
+    #about .section-title,
+    #contact .section-title {
+      color: var(--teal-mid);
+    }
+
+    /* Release cards keep their dark backgrounds — no changes needed */
+
+    #about .about-text p {
+      color: #3a3530;
+    }
+
+    #about .pull-quote {
+      color: var(--ink);
+    }
+
+    #about .member-name {
+      color: var(--ink);
+    }
+
+    /* Contrast fixes: paper-background sections use dark teal instead of turquoise for copy */
+    #music .section-tag,
+    #about .section-tag,
+    #contact .section-tag {
+      color: var(--teal-deep);
+    }
+
+    #about .member-role {
+      color: var(--teal-deep);
+    }
+
+    #about .about-text p:first-of-type::first-letter {
+      color: var(--teal-deep);
+    }
+
+    #contact .contact-channels a::before {
+      color: var(--teal-deep);
+    }
+
+    #about .member-card {
+      border-color: rgba(14,11,8,0.12);
+    }
+
+    #about .member-card:hover {
+      border-color: var(--teal-bright);
+      background: rgba(42,107,107,0.06);
+    }
+
+    #about .devolution-display img {
+      border-color: rgba(14,11,8,0.15);
+    }
+
+    #contact::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 60px;
+      background: var(--paper);
+      clip-path: polygon(0 80%, 5% 40%, 10% 75%, 16% 20%, 22% 60%, 27% 10%, 33% 55%, 40% 80%, 46% 30%, 52% 70%, 58% 25%, 64% 65%, 70% 20%, 76% 60%, 82% 30%, 88% 70%, 94% 40%, 100% 65%, 100% 0, 0 0);
+      z-index: 2;
+    }
+
+    #contact .contact-info p {
+      color: #3a3530;
+    }
+
+    #contact .contact-channels a {
+      color: var(--ink);
+    }
+
+    #contact .contact-channels a:hover {
+      color: var(--teal-accent);
+    }
+
+    #contact .form-label {
+      color: var(--teal-mid);
+      font-weight: 700;
+    }
+
+    #contact .form-title {
+      color: var(--teal-mid);
+      font-size: 0.7rem;
+    }
+
+    #contact .form-input {
+      color: var(--ink);
+      border-bottom-color: rgba(13,43,43,0.45);
+      font-family: 'Special Elite', serif;
+      font-size: 1rem;
+    }
+
+    #contact .form-input::placeholder {
+      color: rgba(14,11,8,0.35);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      #hero { grid-template-columns: 1fr; padding: 100px 28px 80px; }
+      .hero-right { margin: 48px auto 0; width: fit-content; }
+      .logo-container { width: 60%; margin: 0 auto; }
+      .about-layout, .contact-layout { grid-template-columns: 1fr; gap: 48px; }
+      .video-grid { grid-template-columns: 1fr; }
+      section { padding: 80px 28px; }
+      nav { padding: 14px 24px; }
+      .nav-links { gap: 20px; }
+    }
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .nav-burger { display: block; }
+      .tour-item { grid-template-columns: 80px 1fr; }
+      .tour-ticket { display: none; }
+      footer { flex-direction: column; gap: 20px; text-align: center; }
+      .band-members { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#hero" class="nav-logo">
+      <img src="images/TFOU_logo_h.svg" alt="The Fall of Us" style="height:40px;width:auto;display:block;" />
+    </a>
+    <ul class="nav-links">
+      <li><a href="#music">Music</a></li>
+      <li><a href="#tour">Shows</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#video">Video</a></li>
+      <li><a href="#merch">Merch</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="nav-burger" id="nav-burger" aria-label="Open menu" onclick="toggleNav()">
+      <svg viewBox="0 0 24 24" id="burger-icon"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="nav-dropdown" id="nav-dropdown">
+      <a href="#music" onclick="closeNav()">Music</a>
+      <a href="#tour" onclick="closeNav()">Shows</a>
+      <a href="#about" onclick="closeNav()">About</a>
+      <a href="#video" onclick="closeNav()">Video</a>
+      <a href="#merch" onclick="closeNav()">Merch</a>
+      <a href="#contact" onclick="closeNav()">Contact</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="bg-text">FALL</div>
+
+    <div class="hero-left fade-up d1">
+      <div class="logo-container">
+        <div class="logo-glow"></div>
+        <img
+          src="images/thefallofus.png"
+          alt="The Fall of Us"
+          onerror="this.parentElement.innerHTML='<div style=\'font-family:Protest Riot,sans-serif;font-size:2.2rem;text-align:center;line-height:1.1;color:#3d9e9e;letter-spacing:0.05em\'>THE<br>FALL<br><span style=\'font-size:0.6em;color:#6b7a7a;letter-spacing:0.3em\'>OF</span><br><span style=\'color:#b85c38\'>US</span></div>'"
+        />
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-tag fade-up d2">Indie · Punk · Emo · Est. 2025</div>
+      <p class="hero-desc fade-up d3">
+        We are in the autumn of something.<br>
+        Of our lives. Of an era.<br>
+        Of the idea that people give a shit.
+      </p>
+      <div class="hero-cta fade-up d4">
+        <a href="#music" class="btn btn-primary">Listen Now</a>
+        <a href="#tour" class="btn btn-ghost">See Us Live</a>
+      </div>
+      <div class="hero-social fade-up d5">
+        <a href="https://www.facebook.com/thefallofusNY/" target="_blank" rel="noopener" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/thefallofusny/" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
+        </a>
+        <a href="https://thefallofus.bandcamp.com" target="_blank" rel="noopener" aria-label="Bandcamp">
+          <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M2 17.5L8.5 6.5H22L15.5 17.5Z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/@TheFallofUsNY" target="_blank" rel="noopener" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#0d2b2b"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MUSIC -->
+  <section id="music">
+    <div class="section-tag">Discography</div>
+    <h2 class="section-title">Music</h2>
+    <div class="releases-grid">
+
+      <div class="release-card">
+        <div class="release-art" style="background: #0d2020; padding: 0;">
+          <img src="images/TheFallofUs_Demo_Cover.png" alt="The Fall of Us — Demo" style="width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0;">
+        </div>
+        <div class="release-info">
+          <div class="release-name">Demo</div>
+          <div class="release-meta">Demo · 2026</div>
+          <div class="stream-links">
+            <a href="https://thefallofus.bandcamp.com/album/demo" target="_blank" rel="noopener" class="stream-link">Bandcamp</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TOUR -->
+  <section id="tour">
+    <div class="section-tag">Live Dates</div>
+    <h2 class="section-title">Shows</h2>
+    <ul class="tour-list">
+      <li class="tour-item">
+        <div class="tour-date"><span class="tour-date-month">Sep</span><span class="tour-date-day">20</span><span class="tour-date-year">2026</span></div>
+        <div>
+          <div class="tour-venue">Snapper Magee's</div>
+          <div class="tour-city">59 N Front St, Kingston, NY · 5–9pm · w/ TBA</div>
+        </div>
+        <a href="https://dcxpclive.com/dcxpc-live-shows" target="_blank" rel="noopener" class="tour-ticket">More Info</a>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-tag">The Band</div>
+    <h2 class="section-title">Who We Are</h2>
+    <div class="about-layout">
+
+      <div>
+        <div class="about-text">
+          <p>The Fall of Us is an indie/punk/emo band from New York's Hudson Valley, built on loud guitars, raw nerve, and the belief that getting older does not mean getting quieter.</p>
+
+          <p>As autumn hit, the world started coming apart at the seams. The songs that followed wrestle with middle age, relationships, kids, disappointment, pressure, and the relentless work of continuing anyway. There's anger in the music, and sometimes humor, but underneath it is perseverance — the need to keep moving, keep playing, and keep holding onto the parts of yourself that the world tries to wear down.</p>
+
+          <div class="pull-quote">
+            Songs for people old enough to know better, but still not ready to sit down.
+          </div>
+
+          <p>James sings and plays rhythm guitar, Jim (Red Neckromancer, mearth) plays bass, Glenn (Catbox, Wooly Punks) plays drums, and a mysterious lead guitarist may or may not exist depending on who is asking.</p>
+
+        </div>
+
+        <div class="band-members">
+          <div class="member-card">
+            <div class="member-avatar">JK</div>
+            <div>
+              <div class="member-name">James K.</div>
+              <div class="member-role">Vocals / Guitar</div>
+            </div>
+          </div>
+          <div class="member-card">
+            <div class="member-avatar">JD</div>
+            <div>
+              <div class="member-name">Jim D.</div>
+              <div class="member-role">Bass Guitar</div>
+            </div>
+          </div>
+          <div class="member-card">
+            <div class="member-avatar">GC</div>
+            <div>
+              <div class="member-name">Glenn C.</div>
+              <div class="member-role">Drums / Vocals</div>
+            </div>
+          </div>
+          <div class="member-card">
+            <div class="member-avatar">SG</div>
+            <div>
+              <div class="member-name">Some Guy</div>
+              <div class="member-role">Lead Guitar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="devolution-display">
+        <img
+          src="images/TFOU_Devolution2.png"
+          alt="Devolution — The Fall of Us"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='block'"
+        />
+        <div style="display:none; padding:60px 40px; border:1px solid rgba(61,158,158,0.2); text-align:center;">
+          <div style="font-family:Protest Riot,sans-serif;font-size:3rem;color:rgba(61,158,158,0.4);letter-spacing:0.1em;">DEVOLUTION</div>
+          <div style="font-family:Share Tech Mono,monospace;font-size:0.6rem;letter-spacing:0.2em;color:#6b7a7a;margin-top:12px;">T-SHIRT DESIGN</div>
+        </div>
+        <div class="devolution-caption">Devolution — T-Shirt Design</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- VIDEO -->
+  <section id="video">
+    <div class="section-tag">Visuals</div>
+    <h2 class="section-title">Watch</h2>
+    <div class="video-grid">
+      <div class="video-featured">
+        <div class="video-thumb">
+          <div class="play-btn"></div>
+          <div class="video-label">Back and Forth — Official Music Video</div>
+        </div>
+      </div>
+      <div class="video-side-stack">
+        <div class="video-side">
+          <div class="video-thumb">
+            <div class="play-btn" style="width:44px;height:44px;"></div>
+            <div class="video-label" style="font-size:0.75rem;">Half-life — Live</div>
+          </div>
+        </div>
+        <div class="video-side">
+          <div class="video-thumb">
+            <div class="play-btn" style="width:44px;height:44px;"></div>
+            <div class="video-label" style="font-size:0.75rem;">Proof Enough — Live</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MERCH -->
+  <section id="merch">
+    <div class="section-tag">Store</div>
+    <h2 class="section-title">Merch</h2>
+    <div class="merch-grid">
+
+      <a href="https://thefallofus.bandcamp.com/merch/logo-t-shirt" target="_blank" rel="noopener" class="merch-item" style="display:block;text-decoration:none;">
+        <div class="merch-img" style="background:#000; position:relative;">
+          <img
+            src="images/thefallofus.png"
+            alt="Logo Tee"
+            style="width:80%; filter: brightness(0) invert(1); transition: opacity 0.3s ease; position:relative; z-index:1;"
+            class="merch-img-default"
+          />
+          <img
+            src="images/Logo_Tee.png"
+            alt="Logo Tee — Detail"
+            style="width:100%; height:100%; object-fit:cover; position:absolute; inset:0; transition: opacity 0.3s ease; z-index:2;"
+            class="merch-img-hover"
+          />
+        </div>
+        <div class="merch-name">Logo Tee — Black</div>
+        <div class="merch-price">$25</div>
+      </a>
+
+      <a href="https://thefallofus.bandcamp.com/merch/devolution-t-shirt" target="_blank" rel="noopener" class="merch-item" style="display:block;text-decoration:none;">
+        <div class="merch-img devolution-item" style="position:relative;">
+          <img
+            src="images/TFOU_Devolution2.png"
+            alt="Devolution Tee"
+            class="merch-img-default"
+            style="width:80%; transition: opacity 0.3s ease; position:relative; z-index:1;"
+          />
+          <img
+            src="images/Devolution_Tee.png"
+            alt="Devolution Tee — Detail"
+            class="merch-img-hover"
+            style="width:100%; height:100%; object-fit:cover; position:absolute; inset:0; transition: opacity 0.3s ease; z-index:2;"
+          />
+        </div>
+        <div class="merch-name">Devolution Tee</div>
+        <div class="merch-price">$25</div>
+      </a>
+
+
+    </div>
+    <div style="margin-top: 48px; text-align:center;">
+      <a href="#" class="btn btn-ghost">View Full Store</a>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-tag">Get In Touch</div>
+    <h2 class="section-title">Contact</h2>
+    <div class="contact-layout">
+
+      <div class="contact-info">
+        <p>For general inquiries. We read our emails eventually — we're old, we're not dead.</p>
+        <ul class="contact-channels">
+          <li><a href="https://www.facebook.com/thefallofusNY/" target="_blank" rel="noopener">Facebook</a></li>
+          <li><a href="https://www.instagram.com/thefallofusny/" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="https://thefallofus.bandcamp.com" target="_blank" rel="noopener">Bandcamp</a></li>
+          <li><a href="https://www.youtube.com/@TheFallofUsNY" target="_blank" rel="noopener">YouTube</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="form-title">Join the mailing list</div>
+        <form class="mailing-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="contact" />
+          <p style="display:none;"><label>Don't fill this out: <input name="bot-field" /></label></p>
+          <div class="form-group">
+            <label class="form-label">Your Name</label>
+            <input class="form-input" type="text" name="name" placeholder="First Last" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input class="form-input" type="email" name="email" placeholder="you@example.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Message (optional)</label>
+            <textarea class="form-input" name="message" placeholder="Say something..."></textarea>
+          </div>
+          <button type="submit" class="btn-submit">Send It</button>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">The Fall of Us</div>
+    <div>&copy; 2025 The Fall of Us. All rights reserved.</div>
+    <div class="social-links">
+      <a href="https://www.facebook.com/thefallofusNY/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      <a href="https://www.instagram.com/thefallofusny/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg></a>
+      <a href="https://thefallofus.bandcamp.com" target="_blank" rel="noopener" aria-label="Bandcamp"><svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M2 17.5L8.5 6.5H22L15.5 17.5Z"/></svg></a>
+      <a href="https://www.youtube.com/@TheFallofUsNY" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#060e0e"/></svg></a>
+    </div>
+  </footer>
+
+  <script>
+    // ── MOBILE NAV ──
+    function toggleNav() {
+      var dd = document.getElementById('nav-dropdown');
+      if (dd) dd.classList.toggle('is-open');
+    }
+    function closeNav() {
+      var dd = document.getElementById('nav-dropdown');
+      if (dd) dd.classList.remove('is-open');
+    }
+
+    // ── FADE-UP ANIMATIONS ──
+    (function() {
+      var els = document.querySelectorAll('.fade-up');
+      if (!els.length) return;
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.style.animationPlayState = 'running';
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      els.forEach(function(el) {
+        el.style.animationPlayState = 'paused';
+        observer.observe(el);
+      });
+    })();
+
+    // ── NAV LOGO: show once hero logo scrolls out of view ──
+    (function() {
+      var heroLogo = document.querySelector('.logo-container');
+      var navLogo  = document.querySelector('.nav-logo');
+      if (!heroLogo || !navLogo) return;
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            navLogo.classList.remove('is-visible');
+          } else {
+            navLogo.classList.add('is-visible');
+          }
+        });
+      }, { threshold: 0 });
+      observer.observe(heroLogo);
+    })();
+  </script>
+
+</body>
+</html>
