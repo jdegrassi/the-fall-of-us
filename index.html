@@ -1481,23 +1481,32 @@
 
       <div>
         <div class="form-title">Join the mailing list</div>
-        <form class="mailing-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-          <input type="hidden" name="form-name" value="contact" />
-          <p style="display:none;"><label>Don't fill this out: <input name="bot-field" /></label></p>
+        <div data-fs-success style="display:none; font-family:'Space Mono',monospace; font-size:0.75rem; color:var(--teal-accent); letter-spacing:0.15em; padding:16px 0;">
+          ✓ MESSAGE SENT — THANKS FOR REACHING OUT.
+        </div>
+        <div data-fs-error style="display:none; font-family:'Space Mono',monospace; font-size:0.7rem; color:var(--amber); letter-spacing:0.1em; padding:16px 0;"></div>
+        <form id="contact-form" class="mailing-form">
           <div class="form-group">
             <label class="form-label">Your Name</label>
-            <input class="form-input" type="text" name="name" placeholder="First Last" required />
+            <input class="form-input" type="text" name="name" placeholder="First Last" required data-fs-field />
+            <span data-fs-error="name" style="font-family:'Space Mono',monospace; font-size:0.6rem; color:var(--amber);"></span>
           </div>
           <div class="form-group">
             <label class="form-label">Email Address</label>
-            <input class="form-input" type="email" name="email" placeholder="you@example.com" required />
+            <input class="form-input" type="email" name="email" placeholder="you@example.com" required data-fs-field />
+            <span data-fs-error="email" style="font-family:'Space Mono',monospace; font-size:0.6rem; color:var(--amber);"></span>
           </div>
           <div class="form-group">
             <label class="form-label">Message (optional)</label>
-            <textarea class="form-input" name="message" placeholder="Say something..."></textarea>
+            <textarea class="form-input" name="message" placeholder="Say something..." data-fs-field></textarea>
           </div>
-          <button type="submit" class="btn-submit">Send It</button>
+          <button type="submit" class="btn-submit" data-fs-submit-btn>Send It</button>
         </form>
+        <script>
+          window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
+          formspree('initForm', { formElement: '#contact-form', formId: 'mgobgkyr' });
+        </script>
+        <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
       </div>
 
     </div>
